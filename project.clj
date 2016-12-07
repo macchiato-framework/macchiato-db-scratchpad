@@ -14,8 +14,9 @@
             [lein-npm "0.6.2"]
             [lein-figwheel "0.5.8"]
             [lein-cljsbuild "1.1.4"]
-  [org.clojure/clojurescript "1.9.293"]]
-  :npm {:dependencies [[source-map-support "0.4.6"]
+            [org.clojure/clojurescript "1.9.293"]]
+  :npm {:dependencies [[pg "6.1.0"]
+                       [source-map-support "0.4.6"]
                        [ws "1.1.1"]]}
   :source-paths ["src" "target/classes"]
   :clean-targets ["target"]
@@ -23,35 +24,35 @@
   :profiles
   {:dev
    {:cljsbuild
-    {:builds {:dev
-              {:source-paths ["env/dev" "src"]
-               :figwheel     true
-               :compiler     {:main          machtest.app
-                              :output-to     "target/out/machtest.js"
-                              :output-dir    "target/out"
-                              :target        :nodejs
-                              :optimizations :none
-                              :pretty-print  true
-                              :source-map    true}}}}
+                  {:builds {:dev
+                            {:source-paths ["env/dev" "src"]
+                             :figwheel     true
+                             :compiler     {:main          machtest.app
+                                            :output-to     "target/out/machtest.js"
+                                            :output-dir    "target/out"
+                                            :target        :nodejs
+                                            :optimizations :none
+                                            :pretty-print  true
+                                            :source-map    true}}}}
     :figwheel
-    {:http-server-root "public"
-     :nrepl-port 7000
-     :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+                  {:http-server-root "public"
+                   :nrepl-port       7000
+                   :nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
     :dependencies [[com.cemerick/piggieback "0.2.1"]]
     :source-paths ["env/dev"]
     :repl-options {:init-ns user}}
    :test
    {:cljsbuild
-    {:builds
-     {:test
-      {:source-paths ["env/test" "src" "test"]
-       :compiler     {:main machtest.app
-                            :output-to     "target/test/machtest.js"
-                            :target        :nodejs
-                            :optimizations :none
-                            :source-map    true
-                            :pretty-print  true}}}}
+         {:builds
+          {:test
+           {:source-paths ["env/test" "src" "test"]
+            :compiler     {:main          machtest.app
+                           :output-to     "target/test/machtest.js"
+                           :target        :nodejs
+                           :optimizations :none
+                           :source-map    true
+                           :pretty-print  true}}}}
     :doo {:build "test"}}
    :release
    {:cljsbuild
@@ -64,15 +65,15 @@
                       :optimizations :simple
                       :pretty-print  false}}}}}}
   :aliases
-  {"build" ["do"
-            ["clean"]
-            ["npm" "install"]
-            ["figwheel" "dev"]]
+  {"build"   ["do"
+              ["clean"]
+              ["npm" "install"]
+              ["figwheel" "dev"]]
    "package" ["do"
               ["clean"]
               ["npm" "install"]
               ["npm" "init" "-y"]
               ["with-profile" "release" "cljsbuild" "once"]]
-   "test" ["do"
-           ["npm" "install"]
-           ["with-profile" "test" "doo" "node"]]})
+   "test"    ["do"
+              ["npm" "install"]
+              ["with-profile" "test" "doo" "node"]]})
