@@ -3,6 +3,7 @@
   :url "http://example.com/FIXME"
   :dependencies [[bidi "2.0.14"]
                  [com.taoensso/timbre "4.7.4"]
+                 [funcool/promesa "1.6.0"]
                  [hiccups "0.3.0"]
                  [macchiato/core "0.0.4"]
                  [macchiato/env "0.0.3"]
@@ -16,6 +17,7 @@
             [lein-cljsbuild "1.1.4"]
             [org.clojure/clojurescript "1.9.293"]]
   :npm {:dependencies [[pg "6.1.0"]
+                       [fibers "1.0.15"]
                        [source-map-support "0.4.6"]
                        [ws "1.1.1"]]}
   :source-paths ["src" "target/classes"]
