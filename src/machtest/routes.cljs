@@ -3,8 +3,7 @@
     [bidi.bidi :as bidi]
     [hiccups.runtime]
     [macchiato.util.response :as r]
-    [machtest.db :as db]
-    [promesa.core :as p :refer-macros [alet]])
+    [machtest.db :as db])
   (:require-macros
     [hiccups.core :refer [html]]))
 
@@ -28,20 +27,7 @@
                 [:p "We found " sv " on the db"]]])
             (r/ok)
             (r/content-type "text/html")
-            (res)))))
-
-  #_(alet [result (p/await (db/run-promise "select * from names"))
-           sv     (->> (.-rows result)
-                       (map #(aget % "name"))
-                       (clojure.string/join ", "))]
-      (-> (html
-            [:html
-             [:body
-              [:h2 "Hello World!"]
-              [:p "We found " sv " on the db"]]])
-          (r/ok)
-          (r/content-type "text/html")
-          (res))))
+            (res))))))
 
 
 (defn with-wait [req res raise]

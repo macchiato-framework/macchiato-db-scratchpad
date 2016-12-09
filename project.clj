@@ -3,7 +3,6 @@
   :url "http://example.com/FIXME"
   :dependencies [[bidi "2.0.14"]
                  [com.taoensso/timbre "4.7.4"]
-                 [funcool/promesa "1.6.0"]
                  [hiccups "0.3.0"]
                  [macchiato/core "0.0.4"]
                  [macchiato/env "0.0.3"]

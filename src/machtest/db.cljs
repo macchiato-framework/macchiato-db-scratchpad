@@ -1,5 +1,4 @@
-(ns machtest.db
-  (:require [promesa.core :as p :refer-macros [alet]]))
+(ns machtest.db)
 
 
 (def config {:user              "machtest"
@@ -12,38 +11,6 @@
              })
 
 (def pg (js/require "pg"))
-
-(def pool (pg.Pool. (clj->js config)))
-
-(defn run-promise [query-string]
-  (p/promise
-    (fn [resolve reject]
-      (.query
-        pool
-        query-string
-        (fn [err res]
-          (if err
-            (reject err)
-            (resolve res)))))))
-
-(defn run-promise-with-client [query-string]
-  (p/promise
-    (fn [resolve reject]
-      (.connect
-        pool
-        (fn [err client done]
-          (if err
-            (reject "Error fetching client" err)
-            (.query
-              client query-string
-              (fn [err r]
-                (done)                                    ; Release client
-                (if err
-                  (reject err)
-                  (resolve r))))))))))
-
-
-
 
 (def Future (js/require "fibers/future"))
 (def pool-future (.wrap Future (pg.Pool. (clj->js config))))
