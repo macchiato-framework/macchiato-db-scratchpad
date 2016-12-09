@@ -3,6 +3,7 @@
     [bidi.bidi :as bidi]
     [hiccups.runtime]
     [macchiato.util.response :as r]
+    [machtest.db :as db]
     [promesa.core :as p :refer-macros [alet]])
   (:require-macros
     [hiccups.core :refer [html]]))
@@ -14,9 +15,9 @@
         (recur (.getTime (js/Date.)))))))
 
 (defn home [req res raise]
-  (machtest.db/detached-task
+  (db/detached-task
     (fn []
-      (let [result (machtest.db/run-future "select * from names")
+      (let [result (db/run-future "select * from names")
             sv     (->> (.-rows result)
                         (map #(aget % "name"))
                         (clojure.string/join ", "))]
@@ -29,7 +30,7 @@
             (r/content-type "text/html")
             (res)))))
 
-  #_(alet [result (p/await (machtest.db/run-promise "select * from names"))
+  #_(alet [result (p/await (db/run-promise "select * from names"))
            sv     (->> (.-rows result)
                        (map #(aget % "name"))
                        (clojure.string/join ", "))]
@@ -44,7 +45,7 @@
 
 
 (defn with-wait [req res raise]
-  (machtest.db/detached-task
+  (db/detached-task
     (fn []
       (do-work 10000)
       (-> (html
