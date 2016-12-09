@@ -7,34 +7,55 @@
   (:require-macros
     [hiccups.core :refer [html]]))
 
-(defn home [req res raise]
-  #_(machtest.db/detached-task
-      (fn []
-        (let [result (machtest.db/run-future "select * from names")
-              sv     (->> (.-rows result)
-                          (map #(aget % "name"))
-                          (clojure.string/join ", "))]
-          (-> (html
-                [:html
-                 [:body
-                  [:h2 "Hello World!"]
-                  [:p "We found " sv " on the db"]]])
-              (r/ok)
-              (r/content-type "text/html")
-              (res)))))
+(defn do-work [n]
+  (let [t (.getTime (js/Date.))]
+    (loop [now (.getTime (js/Date.))]
+      (when (> n (- now t))
+        (recur (.getTime (js/Date.)))))))
 
-  (alet [result (p/await (machtest.db/run-promise "select * from names"))
-         sv     (->> (.-rows result)
-                     (map #(aget % "name"))
-                     (clojure.string/join ", "))]
-    (-> (html
-          [:html
-           [:body
-            [:h2 "Hello World!"]
-            [:p "We found " sv " on the db"]]])
-        (r/ok)
-        (r/content-type "text/html")
-        (res))))
+(defn home [req res raise]
+  (machtest.db/detached-task
+    (fn []
+      (let [result (machtest.db/run-future "select * from names")
+            sv     (->> (.-rows result)
+                        (map #(aget % "name"))
+                        (clojure.string/join ", "))]
+        (-> (html
+              [:html
+               [:body
+                [:h2 "Hello World!"]
+                [:p "We found " sv " on the db"]]])
+            (r/ok)
+            (r/content-type "text/html")
+            (res)))))
+
+  #_(alet [result (p/await (machtest.db/run-promise "select * from names"))
+           sv     (->> (.-rows result)
+                       (map #(aget % "name"))
+                       (clojure.string/join ", "))]
+      (-> (html
+            [:html
+             [:body
+              [:h2 "Hello World!"]
+              [:p "We found " sv " on the db"]]])
+          (r/ok)
+          (r/content-type "text/html")
+          (res))))
+
+
+(defn with-wait [req res raise]
+  (machtest.db/detached-task
+    (fn []
+      (do-work 10000)
+      (-> (html
+            [:html
+             [:body
+              [:h2 "Hello World!"]
+              [:p "I am done waiting"]]])
+          (r/ok)
+          (r/content-type "text/html")
+          (res))
+      )))
 
 (defn not-found [req res raise]
   (-> (html
@@ -48,6 +69,7 @@
 (def routes
   ["/"
    [["" home]
+    ["wait" with-wait]
     [true not-found]]])
 
 (defn router [req res raise]
