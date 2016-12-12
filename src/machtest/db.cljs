@@ -22,7 +22,7 @@
 
 (def pool-future (.wrap Future pool))
 
-(defn query [query-string]
+(defn single-query [query-string]
   (.wait (.queryFuture pool-future query-string)))
 
 (defn with-transaction [query-string]
@@ -30,34 +30,25 @@
   (try
     (let [client   (.wait (.connectFuture pool-future))
           ; Wrapping the entire client causes an issue on repeated requests,
-          ; because it loses some references
+          ; because it loses some references. Looks like what we get back from
+          ; the wrapping is a proxy. It's probably meant for wrapping modules
+          ; and not instances, but wrapping a single function works well.
           q-future (.wrap Future client.query)
-          query    #(.wait (.call q-future client %))
+          query    (fn [qs & rest]
+                     (.wait (.call q-future client qs (clj->js rest))))
           _        (query "BEGIN")
           _        (query "insert into names (name) values ('the new guy')")
+          _        (query "insert into names (name, age) values ($1::text, $2)" "joeBob" 21)
           result   (query query-string)
           _        (query "ROLLBACK")
           ]
-      (.log js/console result)
+      ; (.log js/console result)
       (.release client)
       (.log js/console "Released")
       result)
     (catch js/Error e
       (.error js/console "Caught" e)
       [])))
-
-#_(defn with-transaction [query-string]
-    (.log js/console "Entered with-transaction")
-    (let [non-wrapped (pg.Client. (clj->js config))
-          client      (.wrap Future non-wrapped)
-          _           (.log js/console "To transaction...")
-          tr          (.wait (.queryFuture client "BEGIN"))
-          _           (.log js/console tr)
-          result      (.wait (.queryFuture client query-string))
-          _           (.log js/console (.wait (.queryFuture client "ROLLBACK")))
-          ]
-      (.wait (.releaseFuture client))
-      result))
 
 (defn detached-task [f] (->> f (.task Future) .detach))
 
