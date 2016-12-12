@@ -2,6 +2,7 @@
   (:require
     [bidi.bidi :as bidi]
     [hiccups.runtime]
+    [macchiato.futures :refer [task detached-task]]
     [macchiato.util.response :as r]
     [machtest.db :as db])
   (:require-macros
@@ -14,7 +15,7 @@
         (recur (.getTime (js/Date.)))))))
 
 (defn home [req res raise]
-  (db/detached-task
+  (task
     (fn []
       (let [result (db/with-transaction "select * from names")
             sv     (->> (.-rows result)
@@ -30,7 +31,7 @@
             (res))))))
 
 (defn delete [req res raise]
-  (db/detached-task
+  (detached-task
     (fn []
       (let [result (db/with-transaction "delete from names")]
         (.log js/console "Deleted..." result)
@@ -45,7 +46,7 @@
 
 
 (defn with-wait [req res raise]
-  (db/detached-task
+  (detached-task
     (fn []
       (do-work 10000)
       (-> (html

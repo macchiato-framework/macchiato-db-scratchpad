@@ -1,5 +1,6 @@
 (ns machtest.core
   (:require
+    [machtest.config :refer [env]]
     [machtest.middleware :refer [wrap-defaults]]
     [machtest.routes :refer [router]]
     [macchiato.env :as config]
@@ -8,7 +9,6 @@
     [mount.core :as mount :refer [defstate]]
     [taoensso.timbre :refer-macros [log trace debug info warn error fatal]]))
 
-(defstate env :start (config/env))
 
 (defstate http :start (js/require "http"))
 

@@ -3,6 +3,7 @@
   :url "http://example.com/FIXME"
   :dependencies [[bidi "2.0.14"]
                  [com.taoensso/timbre "4.7.4"]
+                 [environ "1.1.0"]
                  [hiccups "0.3.0"]
                  [macchiato/core "0.0.4"]
                  [macchiato/env "0.0.3"]
@@ -11,6 +12,7 @@
                  [org.clojure/clojurescript "1.9.293"]]
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :plugins [[lein-doo "0.1.7"]
+            [lein-environ "1.1.0"]
             [lein-npm "0.6.2"]
             [lein-figwheel "0.5.8"]
             [lein-cljsbuild "1.1.4"]
@@ -35,6 +37,11 @@
                                             :optimizations :none
                                             :pretty-print  true
                                             :source-map    true}}}}
+    :env          {:db-user     "machtest"
+                   :db-password "testdb"
+                   :db-name     "machtest_dev"
+                   :db-host     "localhost"}
+
     :figwheel
                   {:http-server-root "public"
                    :nrepl-port       7000
