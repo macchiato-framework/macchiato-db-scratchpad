@@ -34,31 +34,38 @@
   :end (.end db-pool))
 
 
-(defn single-query [query-string]
+(defn query-no-pool [query-string]
   (.wait (.query @db-pool query-string)))
 
 
-(defn with-transaction [query-string]
-  (try
-    (let [client   (wait (.connect @db-pool))
-          ; Wrapping the entire client causes an issue on repeated requests,
-          ; because it loses some references. Looks like what we get back from
-          ; the wrapping is a proxy. It's probably meant for wrapping modules
-          ; and not instances, but wrapping a single function works well.
-          q-future (wrap-future client.query)
-          query    (fn [qs & rest]
-                     (wait (.call q-future client qs (clj->js rest))))
-          _        (query "BEGIN")
-          _        (query "insert into names (name) values ('the new guy')")
-          _        (query "insert into names (name, age) values ($1::text, $2)" "joeBob" 21)
-          result   (query query-string)
-          _        (query "ROLLBACK")]
-      ; To Review: If we get an exception, I' expect the client to not be released
-      ; That's another reason why it would be real nice if we could just do this
-      ; inside a macro.
-      (.release client)
-      (.log js/console "Released")
-      result)
-    (catch js/Error e
-      (.error js/console "Caught" e)
-      [])))
+(defn with-transaction
+  "Will initialize a client from the database pool, obtain a query-fn,
+  and then invoke the function it receives with the query-fn as its
+  argument. Does transaction handling.
+
+  The function will be executed in a transaction, which will be rolled
+  back in case of an exception. Any exception caught will be re-thrown."
+  [f]
+  (let [client   (wait (.connect @db-pool))
+        ; Wrapping the entire client causes an issue on repeated requests,
+        ; because it loses some references. Looks like what we get back from
+        ; the wrapping is a proxy. It's probably meant for wrapping modules
+        ; and not instances, but wrapping a single function works well.
+        q-future (wrap-future client.query)
+        query    (fn [qs & rest]
+                   (wait (.call q-future client qs (clj->js rest))))]
+    (try
+      (query "BEGIN")
+      (let [r (f query)]
+        (query "COMMIT")
+        r)
+      (catch js/Error e
+        (query "ROLLBACK")
+        (throw e))
+      (finally
+        (.release client)))))
+
+(defn single-query
+  [query-string]
+  (with-transaction
+    #(% query-string)))

@@ -14,10 +14,20 @@
       (when (> n (- now t))
         (recur (.getTime (js/Date.)))))))
 
+
+(defn add-new-users []
+  (db/with-transaction
+    (fn [query]
+      (query "insert into names (name, age) values ($1::text, $2)" "joeBob" 21)
+      (query "insert into names (name, age) values ($1::text, $2)" "jack" 25)
+      (query "insert into names (name) values ($1)" "Unnamed")
+      "Added everyone")))
+
+
 (defn home [req res raise]
-  (task
+  (detached-task
     (fn []
-      (let [result (db/with-transaction "select * from names")
+      (let [result (db/single-query "select * from names")
             sv     (->> (.-rows result)
                         (map #(aget % "name"))
                         (clojure.string/join ", "))]
@@ -25,7 +35,29 @@
               [:html
                [:body
                 [:h2 "Hello World!"]
-                [:p "We found " sv " on the db"]]])
+                [:p "We found " sv " on the db"]
+                [:ul
+                 [:li [:a {:href "/create"} "Add new users here"]]
+                 [:li [:a {:href "/delete"} "Delete them all here"]]]]]
+              )
+            (r/ok)
+            (r/content-type "text/html")
+            (res))))))
+
+
+(defn create [req res raise]
+  (detached-task
+    (fn []
+      (let [result (add-new-users)]
+        (.log js/console "Result:" result)
+        (-> (html
+              [:html
+               [:body
+                [:h2 "Hello World!"]
+                [:p result]
+                [:ul
+                 [:li [:a {:href "/"} "Check on root"]]
+                 [:li [:a {:href "/delete"} "Delete them all here"]]]]])
             (r/ok)
             (r/content-type "text/html")
             (res))))))
@@ -33,13 +65,17 @@
 (defn delete [req res raise]
   (detached-task
     (fn []
-      (let [result (db/with-transaction "delete from names")]
+      (let [result (db/single-query "delete from names")
+            total  (aget result "rowCount")]
         (.log js/console "Deleted..." result)
         (-> (html
               [:html
                [:body
                 [:h2 "Hello World!"]
-                [:p "They should all be gone by now"]]])
+                [:p "Deleted " total " users. They should all be gone by now"]
+                [:ul
+                 [:li [:a {:href "/"} "Check on root"]]
+                 [:li [:a {:href "/create"} "Add new users here"]]]]])
             (r/ok)
             (r/content-type "text/html")
             (res))))))
@@ -71,6 +107,7 @@
 (def routes
   ["/"
    [["" home]
+    ["create" create]
     ["delete" delete]
     ["wait" with-wait]
     [true not-found]]])
