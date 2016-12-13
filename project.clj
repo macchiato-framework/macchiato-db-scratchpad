@@ -7,6 +7,7 @@
                  [hiccups "0.3.0"]
                  [macchiato/core "0.0.4"]
                  [macchiato/env "0.0.3"]
+                 [macchiato/futures "0.0.1"]
                  [mount "0.1.10"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.293"]]
@@ -18,7 +19,6 @@
             [lein-cljsbuild "1.1.4"]
             [org.clojure/clojurescript "1.9.293"]]
   :npm {:dependencies [[pg "6.1.0"]
-                       [fibers "1.0.15"]
                        [source-map-support "0.4.6"]
                        [ws "1.1.1"]]}
   :source-paths ["src" "target/classes"]
