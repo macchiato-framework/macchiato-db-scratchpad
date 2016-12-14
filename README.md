@@ -2,7 +2,7 @@
 
 This is a scratchpad project to experiment with approaches for database access on [Macchiato](http://yogthos.net/posts/2016-11-30-Macchiato.html).   Treat this project as back-of-the-napkin scribblings. The whole point is to try different things and see what ends up being cleaner and more Clojuric.
 
-Chances are little or none of the code you'll see has been library-fied.
+Chances are little or none of the code you'll see here has been library-fied. When it's close, we'll move it into the [Macchiato Framework](https://github.com/macchiato-framework/) organization.
 
 ## This code's a mess!
 
@@ -17,7 +17,6 @@ While the Clojurians channel is still the canonical endpoint, it is subject to S
 
 Almost everything.
 
-- Picking an approach to futures/promises (although the [fiber](https://github.com/laverdet/node-fibers)-based one looks promising)
 - Extracting database access into its own namespace so we can easily turn it into a library
 - Migrations
 - Automatic type conversion. Current queries return UUIDs as strings.
@@ -39,13 +38,13 @@ run the following command in the terminal to install NPM modules and start Figwh
 lein build
 ```
 
-run `node` in another terminal:
+Run `node` in another terminal:
 
 ```
 node target/out/machtest.js
 ```
 
-Check `machtest.routes` for the http entry points.
+Check `machtest.routes` for the http entry points and `machtest.db` for the database functions.
 
 #### configuring the REPL
 
