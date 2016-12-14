@@ -1,5 +1,5 @@
 (ns machtest.db
-  (:require [macchiato.futures :refer [wait wrap-future]]
+  (:require [macchiato.futures.core :refer [wait wrap-future]]
             [mount.core :as mount :refer [defstate]]
             [machtest.config :refer [env]]))
 

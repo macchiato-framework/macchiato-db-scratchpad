@@ -2,7 +2,7 @@
   (:require
     [bidi.bidi :as bidi]
     [hiccups.runtime]
-    [macchiato.futures :refer [task detached-task]]
+    [macchiato.futures.core :refer [task detached-task]]
     [macchiato.util.response :as r]
     [machtest.db :as db])
   (:require-macros
