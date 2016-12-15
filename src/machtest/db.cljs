@@ -66,6 +66,7 @@
         (.release client)))))
 
 (defn single-query
-  [query-string]
+  "Runs a single query in a transaction."
+  [& rest]
   (with-transaction
-    #(% query-string)))
+    #(apply % rest)))
