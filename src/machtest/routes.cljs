@@ -27,15 +27,21 @@
 (defn home [req res raise]
   (detached-task
     (fn []
-      (let [result (db/single-query "select * from names")
-            sv     (->> (.-rows result)
-                        (map #(aget % "name"))
-                        (clojure.string/join ", "))]
+      (let [result     (db/single-query "select * from names")
+            jack-count (->
+                         (db/single-query "select count(*) from names where name = $1" "jack")
+                         (aget "rows")
+                         first
+                         (aget "count"))
+            sv         (->> (.-rows result)
+                            (map #(aget % "name"))
+                            (clojure.string/join ", "))]
         (-> (html
               [:html
                [:body
                 [:h2 "Hello World!"]
                 [:p "We found " sv " on the db"]
+                [:p "A grand total of " jack-count " were named jack. The type returned was " (type jack-count)]
                 [:ul
                  [:li [:a {:href "/create"} "Add new users here"]]
                  [:li [:a {:href "/delete"} "Delete them all here"]]]]]
