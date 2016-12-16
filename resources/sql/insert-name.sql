@@ -1,0 +1,1 @@
+INSERT INTO names (name, age) VALUES ($1::text, $2);

@@ -3,10 +3,38 @@
     [bidi.bidi :as bidi]
     [hiccups.runtime]
     [macchiato.futures.core :refer [task detached-task]]
+    [macchiato.sql :as sql]
     [macchiato.util.response :as r]
     [machtest.db :as db])
   (:require-macros
     [hiccups.core :refer [html]]))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; SQL Queries
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+;;
+;; Get a function query map, which right now only contains a couple of functions
+;;
+(def query-map (sql/make-query-map (sql/load-queries "resources/sql")))
+(def insert (:insert-name query-map))
+
+;; Add new users using a query we get from a file
+(defn add-new-users []
+  (db/with-transaction
+    (fn [conn]
+      (insert conn "joeBob" 21)
+      (insert conn "jack" 25)
+      (insert conn "Unnamed" nil)
+      "Added everyone")))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Routes and related
+;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 (defn do-work [n]
   (let [t (.getTime (js/Date.))]
@@ -15,13 +43,7 @@
         (recur (.getTime (js/Date.)))))))
 
 
-(defn add-new-users []
-  (db/with-transaction
-    (fn [query]
-      (query "insert into names (name, age) values ($1::text, $2)" "joeBob" 21)
-      (query "insert into names (name, age) values ($1::text, $2)" "jack" 25)
-      (query "insert into names (name) values ($1)" "Unnamed")
-      "Added everyone")))
+
 
 
 (defn home [req res raise]

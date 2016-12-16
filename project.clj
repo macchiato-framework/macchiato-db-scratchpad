@@ -1,16 +1,18 @@
-(defproject machtest "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
-  :url "http://example.com/FIXME"
+(defproject machtest "0.2.0-SNAPSHOT"
+  :description "Scratchpad project to test implementation approaches for macchiato"
+  :url "https://github.com/ricardojmendez/macchiato-db-scratchpad"
   :dependencies [[bidi "2.0.14"]
                  [com.taoensso/timbre "4.7.4"]
                  [environ "1.1.0"]
                  [hiccups "0.3.0"]
                  [macchiato/core "0.0.7"]
                  [macchiato/env "0.0.3"]
+                 [macchiato/fs "0.0.4-SNAPSHOT"]
                  [macchiato/futures "0.0.2"]
                  [mount "0.1.11"]
                  [org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.293"]]
+                 [org.clojure/clojurescript "1.9.293"]
+                 [prismatic/schema "1.1.3"]]
   :jvm-opts ^:replace ["-Xmx1g" "-server"]
   :plugins [[lein-doo "0.1.7"]
             [lein-environ "1.1.0"]
@@ -55,7 +57,7 @@
          {:builds
           {:test
            {:source-paths ["env/test" "src" "test"]
-            :compiler     {:main          machtest.app
+            :compiler     {:main          machtest.runner
                            :output-to     "target/test/machtest.js"
                            :target        :nodejs
                            :optimizations :none

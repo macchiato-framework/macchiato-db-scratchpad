@@ -1,7 +1,7 @@
 (ns machtest.db
-  (:require [macchiato.futures.core :refer [wait wrap-future]]
-            [mount.core :as mount :refer [defstate]]
-            [machtest.config :refer [env]]))
+  (:require [machtest.config :refer [env]]
+            [macchiato.futures.core :refer [wait wrap-future]]
+            [mount.core :as mount :refer [defstate]]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;
@@ -63,7 +63,6 @@
       ;
       ; Hopefully we won't get back any TYPANALYZE result that starts with a
       ; number but is not actually numeric. Requires more experimentation.
-
       (cond
         (nil? val) nil
         (js/isNaN as-float) val
