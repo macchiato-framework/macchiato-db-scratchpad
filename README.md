@@ -18,9 +18,13 @@ While the Clojurians channel is still the canonical endpoint, it is subject to S
 Almost everything.
 
 - Extracting database access into its own namespace so we can easily turn it into a library
+- Tests
 - Migrations
-- Automatic type coercion. Current queries return UUIDs as strings. There's a working example of type parsers on [`machtest.db`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/machtest/db.cljs)
-- A [HugSQL](https://hugsql.org) equivalent. A draft version which gets queries from a set of files is at [`macchiato.sql`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/macchiato/sql.cljs).
+
+TODO: 
+
+- A more polished [HugSQL](https://hugsql.org) equivalent. A draft version which gets queries from a set of files is at [`macchiato.sql`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/macchiato/sql.cljs).
+- Further review of type coercion. There's a working example of type parsers on [`machtest.db`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/machtest/db.cljs)
 
 ## Prequisites
 

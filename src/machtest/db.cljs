@@ -69,6 +69,12 @@
         (number? as-float) as-float
         :default val))))
 
+(def TYPUUIDOID 2950)
+(.setTypeParser
+  pg-types
+  TYPUUIDOID
+  #(cljs.core/uuid %))
+
 
 (defstate ^:dynamic db-pool
   :start (wrap-future

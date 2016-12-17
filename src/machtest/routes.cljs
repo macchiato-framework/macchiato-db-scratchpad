@@ -5,7 +5,8 @@
     [macchiato.futures.core :refer [task detached-task]]
     [macchiato.sql :as sql]
     [macchiato.util.response :as r]
-    [machtest.db :as db])
+    [machtest.db :as db]
+    [taoensso.timbre :as timbre :refer-macros [info trace debug]])
   (:require-macros
     [hiccups.core :refer [html]]))
 
