@@ -1,8 +1,8 @@
-# Welcome to machtest
+# Welcome to the Macchiato DB Scratchpad
 
-This is a scratchpad project to experiment with approaches for database access on [Macchiato](http://yogthos.net/posts/2016-11-30-Macchiato.html).   Treat this project as back-of-the-napkin scribblings. The whole point is to try different things and see what ends up being cleaner and more Clojuric.
+This is a scratchpad project to experiment with approaches for database access on [Macchiato](http://yogthos.net/posts/2016-11-30-Macchiato.html).  Treat this project as back-of-the-napkin scribblings. The whole point is to try different things and see what ends up being cleaner and more Clojuric.
 
-Chances are little or none of the code you'll see here has been library-fied. When it's close, we'll move it into the [Macchiato Framework](https://github.com/macchiato-framework/) organization.
+Chances are little or none of the code you'll see here has been library-fied. As sections reach that point, we'll move them into independent projects in the [Macchiato Framework](https://github.com/macchiato-framework/) organization.
 
 ## This code's a mess!
 
@@ -19,8 +19,8 @@ Almost everything.
 
 - Extracting database access into its own namespace so we can easily turn it into a library
 - Migrations
-- Automatic type conversion. Current queries return UUIDs as strings.
-- A [HugSQL](https://hugsql.org) equivalent
+- Automatic type coercion. Current queries return UUIDs as strings. There's a working example of type parsers on [`machtest.db`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/machtest/db.cljs)
+- A [HugSQL](https://hugsql.org) equivalent. A draft version which gets queries from a set of files is at [`macchiato.sql`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/macchiato/sql.cljs).
 
 ## Prequisites
 

@@ -4,6 +4,14 @@
   Initially a port of PREQL https://github.com/NGPVAN/preql
   We'll likely expand it into its own as we go.
 
+  This namespace only builds the queries as functions. Database access is
+  expected to take place elsewhere, likely in an abstracted manner.
+
+  Current approach and limitations:
+  - One query, one file.
+  - Queries are named after the file that stores them.
+  - Positional arguments only, doesn't yet take a HugSQL-like parameter map.
+
   Assume any functions are currently a work-in-progress and may change
   before we hit 0.1.0."
   (:require [clojure.string :as string :refer [ends-with? lower-case split trim]]
@@ -34,7 +42,7 @@
   (let [path (fs/with-separator dir-name)]
     (->> (fs/read-dir-sync path)
          ;; We prepend the path so that we can both check if the file name
-         ;; exists and return it as-is
+         ;; exists and return it so that it can be opened as-is
          (map #(str path %))
          (filter sql-file?))))
 
@@ -47,7 +55,7 @@
   [dir-name]
   (->> dir-name
        list-sql-files
-       (map #(hash-map :name (-> (split % "/")
+       (map #(hash-map :name (-> (split % "/")              ; File name contains the folder
                                  last
                                  (string/replace ".sql" ""))
                        :query (trim (fs/slurp %))))))

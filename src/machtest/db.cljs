@@ -71,12 +71,11 @@
 
 
 (defstate ^:dynamic db-pool
-  :start (->>
+  :start (wrap-future
            (doto (pg.Pool. (clj->js config))
              (.on "error" #(.error js/console "Conn error" %1 %2))
              (.on "connect" #(.log js/console "Connection!"))
-             (.on "acquire" #(.log js/console "Acquired!")))
-           wrap-future)
+             (.on "acquire" #(.log js/console "Acquired!"))))
   :end (.end db-pool))
 
 

@@ -62,7 +62,7 @@
     ;; be invoked for the query, the second are arguments.
     ;;
     ;; We'll test this using the str function, since it allows us to play with
-    ;; and skmanipulate the query string being wrapped without executing it.
+    ;; and manipulate the query string being wrapped without executing it.
     ;;
     ;; In normal use, we'd pass something that can actually run the query.
     (is (= "SELECT * FROM names;" (fn-query str)))
