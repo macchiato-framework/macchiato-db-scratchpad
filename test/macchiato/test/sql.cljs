@@ -47,9 +47,9 @@
 
 (deftest make-query-map-test
   ;; Test validation
-  (is (thrown? js/Error (sql/make-queries [{:name "hello" :query 1}])))
-  (is (thrown? js/Error (sql/make-queries [{:name "hello"}])))
-  (is (thrown? js/Error (sql/make-queries [{:query "select * from somewhere;"}])))
+  (is (thrown? js/Error (sql/make-query-map [{:name "hello" :query 1}])))
+  (is (thrown? js/Error (sql/make-query-map [{:name "hello"}])))
+  (is (thrown? js/Error (sql/make-query-map [{:query "select * from somewhere;"}])))
   ;; Create queries
   (let [query-map (sql/make-query-map (sql/load-queries "test/files"))
         fn-query  (:query query-map)
