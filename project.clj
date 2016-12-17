@@ -5,7 +5,7 @@
                  [com.taoensso/timbre "4.7.4"]
                  [environ "1.1.0"]
                  [hiccups "0.3.0"]
-                 [macchiato/core "0.0.7"]
+                 [macchiato/core "0.0.8"]
                  [macchiato/env "0.0.3"]
                  [macchiato/fs "0.0.4-SNAPSHOT"]
                  [macchiato/futures "0.0.2"]
