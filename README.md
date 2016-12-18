@@ -23,7 +23,7 @@ Almost everything.
 
 TODO: 
 
-- A more polished [HugSQL](https://hugsql.org) equivalent. A draft version which gets queries from a set of files is at [`macchiato.sql`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/macchiato/sql.cljs).
+- A more polished [HugSQL](https://hugsql.org) equivalent. A draft version which gets queries from a set of files is at [`macchiato.sql`](https://github.com/macchiato-framework/macchiato-sql).
 - Further review of type coercion. There's a working example of type parsers on [`machtest.db`](https://github.com/macchiato-framework/macchiato-db-scratchpad/blob/master/src/machtest/db.cljs)
 
 ## Prequisites

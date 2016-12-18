@@ -1,5 +1,5 @@
 (ns machtest.runner
   (:require [doo.runner :refer-macros [doo-tests]]
-            [macchiato.test.sql]))
+            [machtest.core-test]))
 
-(doo-tests 'macchiato.test.sql)
+(doo-tests 'machtest.core-test)
