@@ -1,6 +1,6 @@
 (defproject machtest "0.2.0-SNAPSHOT"
   :description "Scratchpad project to test implementation approaches for macchiato"
-  :url "https://github.com/ricardojmendez/macchiato-db-scratchpad"
+  :url "https://github.com/macchiato-framework/macchiato-db-scratchpad"
   :dependencies [[bidi "2.0.14"]
                  [com.taoensso/timbre "4.7.4"]
                  [environ "1.1.0"]
