@@ -8,7 +8,7 @@
                  [macchiato/core "0.0.8"]
                  [macchiato/env "0.0.3"]
                  [macchiato/fs "0.0.4"]
-                 [macchiato/futures "0.0.2"]
+                 [macchiato/futures "0.0.3-SNAPSHOT"]
                  [macchiato/sql "0.0.1"]
                  [mount "0.1.11"]
                  [org.clojure/clojure "1.8.0"]
