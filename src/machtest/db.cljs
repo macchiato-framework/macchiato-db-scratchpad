@@ -5,14 +5,16 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;
-;;;; General notes
+;;;; Requires
 ;;;;;;;;;;;;;;;;;;;;;
 
+(def pg (js/require "pg"))
+(def pg-types (.-types pg))
 
 
 
 ;;;;;;;;;;;;;;;;;;;;;
-;;;; Functions
+;;;; Configuration
 ;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -33,9 +35,6 @@
    :max               (or (:db-max-connections env) 20)
    :idleTimeoutMillis (or (:db-idle-timeout env) 10000)}
 
-
-(def pg (js/require "pg"))
-(def pg-types (.-types pg))
 
 
 ;; Going to configure type coercion using node-pg-types (https://github.com/brianc/node-pg-types)
@@ -76,6 +75,11 @@
   #(cljs.core/uuid %))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Functions and state
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 (defstate ^:dynamic db-pool
   :start (wrap-future
            (doto (pg.Pool. (clj->js config))
@@ -92,16 +96,35 @@
 (defn with-transaction
   "Will initialize a client from the database pool, obtain a query-fn,
   and then invoke the function it receives with the query-fn as its
-  argument. Does transaction handling.
+  argument.
 
-  The function will be executed in a transaction, which will be rolled
-  back in case of an exception. Any exception caught will be re-thrown."
+  Every call to the query function will be waited on, to ensure we are
+  executing them sequentially.
+
+  The functions will be executed in a transaction, which will be rolled
+  back in case of an exception. Any exception caught will be re-thrown.
+
+  Returns the result of releasing the client."
   [f]
   (let [client   (wait (.connect @db-pool))
         ;; Wrapping the entire client causes an issue on repeated requests,
         ;; because it loses some references. Looks like what we get back from
         ;; the wrapping is a proxy. It's probably meant for wrapping modules
         ;; and not instances, but wrapping a single function works well.
+        ;;
+        ;; I'm thinking this might be doable in a single step with a
+        ;; function called `wrap-future-method`, which returns not
+        ;; just a future, but a function that invokes the future on a specific
+        ;; object. Similar to the
+        ;;
+        ;;   (.call q-future client qs (clj->js rest))
+        ;;
+        ;; invocation below. I'd probably need a to pass both the object to
+        ;; invoke it on and the method being future-ified, though, since
+        ;; I don't think there's a way to get the object a function originally
+        ;; came from.
+        ;;
+        ;; For now I'm keeping the semantics transparent.
         q-future (wrap-future client.query)
         query    (fn [qs & rest]
                    (wait (.call q-future client qs (clj->js rest))))]
