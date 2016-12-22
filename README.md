@@ -19,7 +19,7 @@ Almost everything.
 
 - Extracting database access into its own namespace so we can easily turn it into a library
 - Tests
-- Migrations
+- Migrations ([postgrator](https://github.com/rickbergfalk/postgrator) might be useful here)
 
 TODO: 
 
