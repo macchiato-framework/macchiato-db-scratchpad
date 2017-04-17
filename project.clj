@@ -7,7 +7,7 @@
                  [hiccups "0.3.0"]
                  [macchiato/core "0.1.7"]
                  [macchiato/env "0.0.5"]
-                 [macchiato/futures "0.0.3"]
+                 [macchiato/async "0.0.4-SNAPSHOT"]
                  [macchiato/sql "0.0.2"]
                  [mount "0.1.11"]
                  [org.clojure/clojure "1.8.0"]
